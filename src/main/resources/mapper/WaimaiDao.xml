@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.WaimaiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.waimai_uuid_number as waimaiUuidNumber
+        ,a.waimai_name as waimaiName
+        ,a.waimai_photo as waimaiPhoto
+        ,a.waimai_types as waimaiTypes
+        ,a.waimai_kucun_number as waimaiKucunNumber
+        ,a.waimai_price as waimaiPrice
+        ,a.waimai_old_money as waimaiOldMoney
+        ,a.waimai_new_money as waimaiNewMoney
+        ,a.waimai_clicknum as waimaiClicknum
+        ,a.waimai_content as waimaiContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.waimai_delete as waimaiDelete
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.WaimaiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM waimai  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.waimaiUuidNumber != '' and params.waimaiUuidNumber != null and params.waimaiUuidNumber != 'null' ">
+                and a.waimai_uuid_number like CONCAT('%',#{params.waimaiUuidNumber},'%')
+            </if>
+            <if test=" params.waimaiName != '' and params.waimaiName != null and params.waimaiName != 'null' ">
+                and a.waimai_name like CONCAT('%',#{params.waimaiName},'%')
+            </if>
+            <if test="params.waimaiTypes != null and params.waimaiTypes != ''">
+                and a.waimai_types = #{params.waimaiTypes}
+            </if>
+            <if test="params.waimaiKucunNumberStart != null and params.waimaiKucunNumberStart != ''">
+                <![CDATA[  and a.waimai_kucun_number >= #{params.waimaiKucunNumberStart}   ]]>
+            </if>
+            <if test="params.waimaiKucunNumberEnd != null and params.waimaiKucunNumberEnd != ''">
+                <![CDATA[  and a.waimai_kucun_number <= #{params.waimaiKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.waimaiKucunNumber != null and params.waimaiKucunNumber != ''">
+                and a.waimai_kucun_number = #{params.waimaiKucunNumber}
+             </if>
+            <if test="params.waimaiPriceStart != null and params.waimaiPriceStart != ''">
+                <![CDATA[  and a.waimai_price >= #{params.waimaiPriceStart}   ]]>
+            </if>
+            <if test="params.waimaiPriceEnd != null and params.waimaiPriceEnd != ''">
+                <![CDATA[  and a.waimai_price <= #{params.waimaiPriceEnd}   ]]>
+            </if>
+             <if test="params.waimaiPrice != null and params.waimaiPrice != ''">
+                and a.waimai_price = #{params.waimaiPrice}
+             </if>
+            <if test="params.waimaiOldMoneyStart != null ">
+                <![CDATA[  and a.waimai_old_money >= #{params.waimaiOldMoneyStart}   ]]>
+            </if>
+            <if test="params.waimaiOldMoneyEnd != null ">
+                <![CDATA[  and a.waimai_old_money <= #{params.waimaiOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.waimaiNewMoneyStart != null ">
+                <![CDATA[  and a.waimai_new_money >= #{params.waimaiNewMoneyStart}   ]]>
+            </if>
+            <if test="params.waimaiNewMoneyEnd != null ">
+                <![CDATA[  and a.waimai_new_money <= #{params.waimaiNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.waimaiClicknumStart != null and params.waimaiClicknumStart != ''">
+                <![CDATA[  and a.waimai_clicknum >= #{params.waimaiClicknumStart}   ]]>
+            </if>
+            <if test="params.waimaiClicknumEnd != null and params.waimaiClicknumEnd != ''">
+                <![CDATA[  and a.waimai_clicknum <= #{params.waimaiClicknumEnd}   ]]>
+            </if>
+             <if test="params.waimaiClicknum != null and params.waimaiClicknum != ''">
+                and a.waimai_clicknum = #{params.waimaiClicknum}
+             </if>
+            <if test=" params.waimaiContent != '' and params.waimaiContent != null and params.waimaiContent != 'null' ">
+                and a.waimai_content like CONCAT('%',#{params.waimaiContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.waimaiDeleteStart != null and params.waimaiDeleteStart != ''">
+                <![CDATA[  and a.waimai_delete >= #{params.waimaiDeleteStart}   ]]>
+            </if>
+            <if test="params.waimaiDeleteEnd != null and params.waimaiDeleteEnd != ''">
+                <![CDATA[  and a.waimai_delete <= #{params.waimaiDeleteEnd}   ]]>
+            </if>
+             <if test="params.waimaiDelete != null and params.waimaiDelete != ''">
+                and a.waimai_delete = #{params.waimaiDelete}
+             </if>
+
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
